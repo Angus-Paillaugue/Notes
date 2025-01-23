@@ -14,7 +14,7 @@ interface DebounceConfig {
 	delay?: number;
 	callback: (value: string) => void;
 }
-export const debounce = (node: HTMLInputElement, config: DebounceConfig) => {
+export const debounce = (node: HTMLInputElement | HTMLTextAreaElement, config: DebounceConfig) => {
 	const { delay = 0, callback } = config;
 
 	let timer: ReturnType<typeof setTimeout>;
@@ -37,30 +37,36 @@ export const debounce = (node: HTMLInputElement, config: DebounceConfig) => {
 	};
 };
 
+export const isDeepEqual = (
+	object1: Record<string, unknown>,
+	object2: Record<string, unknown>
+): boolean => {
+	const objKeys1 = Object.keys(object1);
+	const objKeys2 = Object.keys(object2);
 
-export const isDeepEqual = (object1: Record<string, unknown>, object2: Record<string, unknown>): boolean => {
-  const objKeys1 = Object.keys(object1);
-  const objKeys2 = Object.keys(object2);
+	if (objKeys1.length !== objKeys2.length) return false;
 
-  if (objKeys1.length !== objKeys2.length) return false;
+	for (const key of objKeys1) {
+		const value1 = object1[key];
+		const value2 = object2[key];
 
-  for (const key of objKeys1) {
-    const value1 = object1[key];
-    const value2 = object2[key];
+		const isObjects = isObject(value1) && isObject(value2);
 
-    const isObjects = isObject(value1) && isObject(value2);
-
-    if ((isObjects && !isDeepEqual(value1 as Record<string, unknown>, value2 as Record<string, unknown>)) || (!isObjects && value1 !== value2)) {
-      return false;
-    }
-  }
-  return true;
+		if (
+			(isObjects &&
+				!isDeepEqual(value1 as Record<string, unknown>, value2 as Record<string, unknown>)) ||
+			(!isObjects && value1 !== value2)
+		) {
+			return false;
+		}
+	}
+	return true;
 };
 
 const isObject = (object: unknown): object is Record<string, unknown> => {
-  return object != null && typeof object === 'object';
+	return object != null && typeof object === 'object';
 };
 
 export const noop = (...args: unknown[]) => {
-  void args;
+	void args;
 };

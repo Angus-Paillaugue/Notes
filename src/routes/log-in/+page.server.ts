@@ -1,6 +1,6 @@
-import { generateAccessToken } from "$lib/server/auth";
-import { getUserByUsername } from "$lib/server/db/user";
-import { fail, redirect, type Actions } from "@sveltejs/kit";
+import { generateAccessToken } from '$lib/server/auth';
+import { getUserByUsername } from '$lib/server/db/user';
+import { fail, redirect, type Actions } from '@sveltejs/kit';
 import bcrypt from 'bcryptjs';
 
 export const actions: Actions = {
@@ -25,6 +25,6 @@ export const actions: Actions = {
 			secure: false
 		});
 
-    throw redirect(303, '/'+username);
+		throw redirect(303, '/app' + username);
 	}
 };

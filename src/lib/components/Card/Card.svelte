@@ -1,21 +1,18 @@
 <script lang="ts">
-	import { cn } from "$lib/utils";
-	import type { SvelteHTMLElements } from "svelte/elements";
+	import { cn } from '$lib/utils';
+	import type { SvelteHTMLElements } from 'svelte/elements';
 
-  type Props = (
-    { href: string } & SvelteHTMLElements['a'] |
-    SvelteHTMLElements['div']
-  )
+	type Props = ({ href: string } & SvelteHTMLElements['a']) | SvelteHTMLElements['div'];
 
-  const { children, class: className, ...restProps }: Props = $props();
+	const { children, class: className, ...restProps }: Props = $props();
 
-  let tagName = 'href' in restProps ? 'a' : 'div';
+	let tagName = 'href' in restProps ? 'a' : 'div';
 </script>
 
 <svelte:element
-  this={tagName}
-  class={cn("bg-card border border-border rounded-lg p-4", className)}
-  {...restProps}
+	this={tagName}
+	class={cn('rounded-lg border border-border bg-card p-4', className)}
+	{...restProps}
 >
-  {@render children?.()}
+	{@render children?.()}
 </svelte:element>

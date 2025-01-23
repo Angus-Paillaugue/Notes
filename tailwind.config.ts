@@ -15,6 +15,7 @@ export default {
 					light: 'hsl(var(--secondary-light) / <alpha-value>)'
 				},
 				danger: 'hsl(var(--danger) / <alpha-value>)',
+				muted: 'hsl(var(--muted) / <alpha-value>)',
 				primary: {
 					DEFAULT: 'hsl(var(--primary) / <alpha-value>)'
 				}

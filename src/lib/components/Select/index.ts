@@ -1,6 +1,7 @@
-import Select from './Select.svelte';
-import Option from './Option.svelte';
+import SelectComponent from './Select.svelte';
+import OptionComponent from './Option.svelte';
 
-Select.Option = Option;
+const Select = SelectComponent as typeof SelectComponent & { Option: typeof OptionComponent };
+Select.Option = OptionComponent;
 
 export default Select;

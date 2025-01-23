@@ -1,6 +1,7 @@
-import Card from "./Card.svelte";
-import Heading from "./Heading.svelte";
+import CardComponent from './Card.svelte';
+import HeadingComponent from './Heading.svelte';
 
-Card.Heading = Heading
+const Card = CardComponent as typeof CardComponent & { Heading: typeof HeadingComponent };
+Card.Heading = HeadingComponent;
 
-export default Card
+export default Card;

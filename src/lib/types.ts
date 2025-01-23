@@ -1,7 +1,6 @@
-
 export interface User {
 	id: number;
-	username: string
+	username: string;
 	password: string;
 	createdAt: Date;
 	notes: Note[];
@@ -15,19 +14,19 @@ export interface CoreNote {
 	type: NoteType;
 	createdAt: Date;
 	updatedAt: Date;
-  user: User;
+	user: User;
 }
 
 export interface TextNote extends CoreNote {
-  type: 'text';
-  content: string;
+	type: 'text';
+	content: string;
 }
 
 export interface ListNoteItem {
-  id: number;
-  item: string;
-  checked: boolean;
-  position: number;
+	id: number;
+	item: string;
+	checked: boolean;
+	position: number;
 }
 
 export interface ListNote extends CoreNote {
@@ -36,3 +35,5 @@ export interface ListNote extends CoreNote {
 }
 
 export type Note = TextNote | ListNote;
+
+export type RequiredFields<T, K extends keyof T> = T & Required<Pick<T, K>>;
