@@ -21,5 +21,5 @@
 	bind:this={textarea}
 	bind:value={note.content}
 	use:debounce={{ callback: save, delay: 500 }}
-	class="h-full w-full grow resize-none bg-background text-foreground outline-none focus:outline-none"
+	class="bg-background text-foreground h-full w-full grow resize-none outline-hidden focus:outline-hidden"
 ></textarea>

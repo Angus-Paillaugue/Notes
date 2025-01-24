@@ -45,33 +45,39 @@
 		<Button
 			variant="icon"
 			loading={isCreatingNote}
-			class="absolute bottom-1.5 right-1.5 top-1.5 aspect-square size-auto p-1.5 hover:bg-card"
+			class="hover:bg-card absolute top-1.5 right-1.5 bottom-1.5 aspect-square size-auto p-1.5"
 		>
 			<Send class="size-full" />
 		</Button>
 	</form>
 
-  <hr>
+	<hr />
 
 	<div class="flex flex-col gap-2">
 		{#each user.notes as note}
-			<Card class="mb-4" href="/app/{user.username}/{note.id}">
+			<Card class="rounded" href="/app/{user.username}/{note.id}">
 				<Card.Heading>{note.title}</Card.Heading>
-        {#if note.type === 'text'}
-          <p class="text-muted line-clamp-3 whitespace-pre-wrap">{note.content}</p>
-        {:else if note.type === 'list'}
-          <div class="max-h-[4.5rem] overflow-y-hidden relative">
-            {#each note.items as item}
-              <div class="flex flex-row gap-2 items-center h-6">
-                <Checkbox id="listNotePrevireCheckbox-{note.id}-{item.position}" checked={item.checked} disabled={true} />
-                <span class="text-muted">{item.item}</span>
-              </div>
-            {/each}
-            {#if note.items.length > 3}
-              <div class="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-b from-transparent to-card"></div>
-            {/if}
-          </div>
-        {/if}
+				{#if note.type === 'text'}
+					<p class="text-muted line-clamp-3 whitespace-pre-wrap">{note.content}</p>
+				{:else if note.type === 'list'}
+					<div class="relative max-h-[4.5rem] overflow-y-hidden">
+						{#each note.items as item}
+							<div class="flex h-6 flex-row items-center gap-2">
+								<Checkbox
+									id="listNotePrevireCheckbox-{note.id}-{item.position}"
+									checked={item.checked}
+									disabled={true}
+								/>
+								<span class="text-muted">{item.item}</span>
+							</div>
+						{/each}
+						{#if note.items.length > 3}
+							<div
+								class="to-card absolute right-0 bottom-0 left-0 h-1/2 bg-linear-to-b from-transparent"
+							></div>
+						{/if}
+					</div>
+				{/if}
 			</Card>
 		{/each}
 	</div>

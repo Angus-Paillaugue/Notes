@@ -1,5 +1,5 @@
 <script>
-	import { Card, Button, Input } from '$lib/components';
+	import { Card, Button, Input, Link } from '$lib/components';
 	import { enhance } from '$app/forms';
 
 	let { form } = $props();
@@ -9,10 +9,10 @@
 
 <div class="mx-auto w-full max-w-xl grow">
 	<Card class="mt-[150px] w-full">
-		<Card.Heading>Sign-in</Card.Heading>
+		<Card.Heading>Sign-up</Card.Heading>
 
 		<form
-			action="?/signIn"
+			action="?/signUp"
 			method="POST"
 			class="mt-6 flex flex-col gap-2"
 			use:enhance={() => {
@@ -27,12 +27,17 @@
 			<Input.Floating type="password" label="Password" id="password" />
 
 			<Button type="submit" loading={isSubmitting} class="mt-4 w-full" variant="primary"
-				>Log-in</Button
+				>Sign-up</Button
 			>
 
 			{#if form && form.message}
 				<p class="mt-2 text-sm text-red-500">{form.message}</p>
 			{/if}
 		</form>
+
+		<p class="mt-4 text-sm">
+			Already have an account?
+			<Link href="/log-in">Log-in</Link>
+		</p>
 	</Card>
 </div>

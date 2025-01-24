@@ -1,5 +1,5 @@
 <script>
-	import { Card, Button, Input } from '$lib/components';
+	import { Card, Button, Input, Link } from '$lib/components';
 	import { enhance } from '$app/forms';
 
 	let { form } = $props();
@@ -14,7 +14,7 @@
 		<form
 			action="?/logIn"
 			method="POST"
-			class="mt-6 flex flex-col gap-2 w-full"
+			class="mt-6 flex w-full flex-col gap-2"
 			use:enhance={() => {
 				isSubmitting = true;
 				return async ({ update }) => {
@@ -34,5 +34,10 @@
 				<p class="mt-2 text-sm text-red-500">{form.message}</p>
 			{/if}
 		</form>
+
+		<p class="mt-4 text-sm">
+			Don't have an account?
+			<Link href="/sign-up">Sign-up</Link>
+		</p>
 	</Card>
 </div>

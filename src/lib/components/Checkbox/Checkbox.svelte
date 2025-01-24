@@ -29,7 +29,7 @@
 				{id}
 				type="checkbox"
 				class={cn(
-					'size-5 cursor-pointer appearance-none rounded border border-border disabled:opacity-70 transition-all checked:bg-card peer',
+					'checked:bg-card peer size-5 cursor-pointer appearance-none rounded border transition-all disabled:opacity-70',
 					className
 				)}
 				bind:checked
@@ -37,7 +37,7 @@
 			/>
 			{#if checked}
 				<span
-					class="pointer-events-none peer-disabled:opacity-70 absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform text-foreground"
+					class="text-foreground pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform peer-disabled:opacity-70"
 					transition:scale={{ duration: 150 }}
 				>
 					<Check class="size-3.5" strokeWidth={3} />
@@ -46,5 +46,5 @@
 		</label>
 	</div>
 {:else}
-	<div class={cn('size-5 animate-pulse rounded border border-border bg-card', className)}></div>
+	<div class={cn('bg-card size-5 animate-pulse rounded border', className)}></div>
 {/if}

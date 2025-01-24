@@ -1,15 +1,15 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import type { LayoutData } from './$types';
-	import Sidebar from './sidebar.svelte';
+	import Nav from './nav.svelte';
 
 	let { children }: { data: LayoutData; children: Snippet } = $props();
-
-	let open = $state(false);
 </script>
 
-<Sidebar bind:open />
+<div class="flex min-h-svh w-full grow flex-col">
+	<Nav />
 
-<main class="flex h-full min-h-svh w-full grow flex-col p-2">
-	{@render children()}
-</main>
+	<main class="flex h-full w-full grow flex-col p-2">
+		{@render children()}
+	</main>
+</div>

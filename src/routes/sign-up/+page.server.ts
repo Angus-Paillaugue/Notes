@@ -5,7 +5,7 @@ import { fail, redirect, type Actions } from '@sveltejs/kit';
 import bcrypt from 'bcryptjs';
 
 export const actions: Actions = {
-	signIn: async ({ request, cookies }) => {
+	signUp: async ({ request, cookies }) => {
 		const formData = Object.fromEntries(await request.formData());
 		const { username, password } = formData as { username: string; password: string };
 
@@ -33,6 +33,6 @@ export const actions: Actions = {
 			secure: false
 		});
 
-		throw redirect(303, '/app' + username);
+		throw redirect(303, '/app/' + username);
 	}
 };

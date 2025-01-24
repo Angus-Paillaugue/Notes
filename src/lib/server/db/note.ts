@@ -56,8 +56,10 @@ export async function createNote(
 	const [result] = await db.execute<ResultSetHeader>(query, [user.id, title, type]);
 	if (type === 'text') {
 		query = "INSERT INTO text_note_content (note_id, content) VALUES (?, '')";
-		await db.execute<ResultSetHeader>(query, [result.insertId]);
+	} else {
+		query = "INSERT INTO list_note_content (note_id, item, position) VALUES (?, '', 0)";
 	}
+	await db.execute<ResultSetHeader>(query, [result.insertId]);
 	return result.insertId;
 }
 
@@ -102,7 +104,7 @@ export async function saveNote(note: Note): Promise<Note> {
 		await saveTextNote(note as TextNote);
 	}
 
-  const query = 'UPDATE note SET updatedAt = NOW() WHERE id = ?';
+	const query = 'UPDATE note SET updatedAt = NOW() WHERE id = ?';
 	await db.execute(query, [note.id]);
 
 	note = (await getNote(note.id)) as Note;

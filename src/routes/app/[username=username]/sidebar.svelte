@@ -18,19 +18,23 @@
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
 		aria-label="Close sidebar"
-		class="fixed inset-0 z-40 bg-background/50 backdrop-blur-sm"
+		class="bg-background/50 fixed inset-0 z-40 backdrop-blur-xs"
 		onclick={() => (open = false)}
 		transition:fade={{ duration: TRANSITION_DURATION }}
 	></div>
 
 	<div class="pointer-events-none fixed inset-0 z-40 flex flex-row justify-end p-2">
 		<div
-			class="pointer-events-auto flex h-full w-full max-w-[400px] flex-col rounded-lg border border-border bg-card p-2"
+			class="bg-card pointer-events-auto flex h-full w-full max-w-[400px] flex-col rounded-lg border p-2"
 			transition:fly={{ duration: TRANSITION_DURATION, x: '100%', easing: backInOut }}
 		>
 			<!-- Header -->
 			<div class="flex shrink-0 flex-row items-center justify-between">
-				<Button variant="icon" aria-label="Close sidebar" onclick={() => (open = false)}>
+				<Button
+					variant={['icon', 'border']}
+					aria-label="Close sidebar"
+					onclick={() => (open = false)}
+				>
 					<X class="size-full" />
 				</Button>
 			</div>

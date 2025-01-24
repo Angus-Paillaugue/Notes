@@ -20,7 +20,7 @@
 		...restProps
 	}: SvelteHTMLElements['input'] & MyProps = $props();
 	const baseClasses =
-		'rounded disabled:cursor-not-allowed disabled:bg-secondary-light w-full bg-secondary border border-border focus:outline-none outline-none focus:ring-2 transition-all ring-primary test-foreground px-3 py-1 text-base font-sans font-normal';
+		'rounded disabled:cursor-not-allowed disabled:bg-secondary-light w-full bg-secondary border focus:outline-hidden outline-hidden focus:ring-2 transition-all ring-primary test-foreground px-3 py-1 text-base font-sans font-normal';
 
 	const finalClasses = cn(baseClasses, className);
 

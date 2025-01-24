@@ -57,14 +57,14 @@
 	<title>{note.title}</title>
 </svelte:head>
 
-<div class="flex h-full w-full grow flex-col gap-2 overflow-x-hidden bg-background text-foreground">
+<div class="bg-background text-foreground flex h-full w-full grow flex-col gap-2 overflow-x-hidden">
 	<!-- Unchecked Items -->
 	<div class="flex flex-col">
 		<!-- Heading -->
 		<div class="my-2 flex w-full flex-row items-center gap-2">
-			<div class="h-0 w-full grow border-b border-border"></div>
+			<div class="h-0 w-full grow border-b"></div>
 			<h1 class="shrink-0 text-xl font-semibold">To Do</h1>
-			<div class="h-0 w-full grow border-b border-border"></div>
+			<div class="h-0 w-full grow border-b"></div>
 		</div>
 
 		<!-- Items -->
@@ -77,7 +77,13 @@
 					out:slide={{ axis: 'y', duration: 200 }}
 					ondragover={(e) => e.preventDefault()}
 				>
-					<ListNoteItemComponent item={note.items[i]} ondrop={handleDrop} {deleteItem} {save} />
+					<ListNoteItemComponent
+						focus={i === note.items.length - 1}
+						item={note.items[i]}
+						ondrop={handleDrop}
+						{deleteItem}
+						{save}
+					/>
 				</div>
 			{/each}
 		</div>

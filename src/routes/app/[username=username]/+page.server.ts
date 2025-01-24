@@ -16,6 +16,6 @@ export const actions: Actions = {
 
 		const noteId = await createNote(user, title, type);
 
-		throw redirect(303, `/${user.username}/${noteId}`);
+		throw redirect(303, `/app/${user.username}/${noteId}`);
 	}
 };

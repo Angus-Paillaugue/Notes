@@ -25,6 +25,6 @@ export const actions: Actions = {
 			secure: false
 		});
 
-		throw redirect(303, '/app' + username);
+		throw redirect(303, '/app/' + username);
 	}
 };

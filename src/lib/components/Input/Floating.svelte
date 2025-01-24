@@ -21,33 +21,23 @@
 	let innerType = $state(type); // Used to toggle password visibility
 	const classes = {
 		label: {
-      '': 'absolute text-sm text-muted duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5',
-			'peer-placeholder-shown:': 'scale-100 translate-y-0',
-			'peer-focus:': 'text-primary scale-75 -translate-y-4',
-			'rtl:': {
-				'peer-focus:': 'translate-x-1/4 left-auto'
-			},
+			'': 'absolute text-sm text-muted duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:text-primary peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto'
 		},
-		input: {
-			'': cn(
-				'block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full bg-secondary border appearance-none text-foreground border-border peer border-b-2 transition-colors text-base font-sans font-normal',
-				className
-			),
-			'focus:': 'outline-none ring-0 border-b-primary'
-		},
+		input: cn(
+			'block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full bg-secondary border appearance-none text-foreground peer border-b-2 transition-colors text-base font-sans font-normal focus:outline-hidden focus:ring-0 focus:border-b-primary',
+			className
+		),
 		container: 'relative',
 		toggleVisibility: {
-			button: {
-				'': 'absolute top-1/2 -translate-y-1/2 right-2.5 rtl:left-2.5 rtl:right-auto size-7 text-muted p-1 rounded',
-				'hover:': 'bg-card'
-			}
+			button:
+				'absolute top-1/2 -translate-y-1/2 right-2.5 rtl:left-2.5 rtl:right-auto size-7 text-muted p-1 rounded hover:bg-card'
 		}
 	};
 
 	function concatenateClasses(obj: Record<string, any> | string, prefix = ''): string {
 		let result = '';
 
-    if(typeof obj === 'string') return obj;
+		if (typeof obj === 'string') return obj;
 
 		for (const key in obj) {
 			if (typeof obj[key] === 'object' && !Array.isArray(obj[key])) {
@@ -65,7 +55,7 @@
 		return cn(result);
 	}
 
-  // Function to toggle password visibility
+	// Function to toggle password visibility
 	function toggleType() {
 		innerType = innerType === 'password' ? 'text' : 'password';
 	}

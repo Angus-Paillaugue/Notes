@@ -1,23 +1,22 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import { Text as TextNoteComponent} from '$lib/components/core/note';
-	import { List as ListNoteComponent} from '$lib/components/core/note';
+	import { Text as TextNoteComponent } from '$lib/components/core/note';
+	import { List as ListNoteComponent } from '$lib/components/core/note';
 	import type { TextNote, ListNote } from '$lib/types';
-	import { Input, Card } from '$lib/components';
-	import { ChevronLeft, Cloud, RefreshCcw } from 'lucide-svelte';
+	import { Input, Card, Modal, Button } from '$lib/components';
+	import { Cloud, Pencil, RefreshCcw, Trash2 } from 'lucide-svelte';
 	import { onMount } from 'svelte';
-	import Button from '$lib/components/Button/Button.svelte';
 
 	let { data }: { data: PageData } = $props();
-
 	let note = $state(data.note);
 	let isSaving = $state(false);
 	let isMounted = $state(false);
+	let editNoteModalOpen = $state(true);
 
 	async function save() {
 		if (isSaving || !isMounted) return;
 		isSaving = true;
-		console.log('Saving note');
+
 		const url = `/api/note/${note.type}/save`;
 		const res = await fetch(url, {
 			method: 'PUT',
@@ -48,20 +47,30 @@
 	});
 </script>
 
-<div class="mx-auto flex w-full max-w-screen-md grow flex-col gap-1">
-	<div class="flex flex-row gap-2">
-		<Button href="/app" variant={['secondary', 'icon']} class="size-12 shrink-0 p-2">
-			<ChevronLeft class="size-full" />
-		</Button>
-		<Input
-			bind:value={note.title}
-			id="noteTitle"
-			debounce={500}
-			onValueChange={save}
-			placeholder="Title"
-			class="h-12 grow text-2xl font-medium"
-		/>
+<Modal bind:open={editNoteModalOpen}>
+	<Modal.Heading>Edit note</Modal.Heading>
+	<div class="flex w-full flex-col gap-2">
+		<button
+			class="bg-danger/20 hover:bg-danger flex w-full flex-row items-center justify-start gap-2 rounded px-3 py-1 text-start transition-colors"
+		>
+			<Trash2 class="size-4" />
+			Delete Note
+		</button>
 	</div>
+</Modal>
+
+<div class="mx-auto flex w-full max-w-screen-md grow flex-col gap-1">
+	<!-- Note title input -->
+	<Input
+		bind:value={note.title}
+		id="noteTitle"
+		debounce={500}
+		onValueChange={save}
+		placeholder="Title"
+		class="h-12 text-2xl font-medium"
+	/>
+
+	<!-- Main note components -->
 	<div class="flex grow flex-col overflow-y-auto">
 		{#if note.type === 'text'}
 			<TextNoteComponent bind:note={note as TextNote} {save} />
@@ -70,7 +79,15 @@
 		{/if}
 	</div>
 
-	<Card class="w-full shrink-0">
+	<!-- Footer -->
+	<Card class="w-full shrink-0 flex-row items-center justify-between">
+		<Button
+			variant={['icon', 'border']}
+			class="hover:bg-background"
+			onclick={() => (editNoteModalOpen = true)}
+		>
+			<Pencil class="size-full" />
+		</Button>
 		<div class="size-5">
 			{#if isSaving}
 				<RefreshCcw class="size-full" />

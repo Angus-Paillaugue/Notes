@@ -3,7 +3,7 @@
 	import type { ListNoteItem } from '$lib/types';
 	import { cn } from '$lib/utils';
 	import { GripVertical, Trash } from 'lucide-svelte';
-	import { onDestroy } from 'svelte';
+	import { onDestroy, onMount } from 'svelte';
 	import { isSwiping as isSwipingFromEveryInstance } from '$lib/stores';
 
 	interface Props {
@@ -11,9 +11,10 @@
 		deleteItem: (item: ListNoteItem) => void;
 		save: () => void;
 		ondrop?: (draggedId: string, targetId: string) => void;
+		focus: boolean;
 	}
 
-	let { item = $bindable(), deleteItem, save, ondrop }: Props = $props();
+	let { item = $bindable(), deleteItem, save, focus, ondrop }: Props = $props();
 	let SWIPE_X_THRESHOLD = $state(0);
 	const MOBILE_ACTION_MISSHAPE_DELAY = 200;
 
@@ -134,7 +135,7 @@
 			id: item.id
 		};
 	}
-	function handleTouchEndRow(event: TouchEvent) {
+	function handleTouchEndRow() {
 		// On touch end from swiping the row to the side on mobile
 		if (!isSwiping) {
 			clearTimeout(touchTimeout);
@@ -172,7 +173,7 @@
 			id: item.id
 		};
 	}
-	function handleDragEndRow(event: MouseEvent) {
+	function handleDragEndRow() {
 		// On mouse up from dragging the row to the side on desktop
 		if (!isSwiping || isDragging) {
 			clearTimeout(touchTimeout);
@@ -192,6 +193,13 @@
 			swipeX = 0;
 		}
 	});
+
+	onMount(() => {
+		if (focus) {
+			const input = document.getElementById(`noteInputItem-${item.id}`) as HTMLTextAreaElement;
+			input.focus();
+		}
+	});
 </script>
 
 <svelte:window onmousemove={handleDragMoveRow} />
@@ -200,7 +208,7 @@
 	<!-- svelte-ignore a11y_no_static_element_interactions -->
 	<div
 		class={cn(
-			'group relative flex flex-row items-center gap-1 before:absolute before:left-0 before:h-full before:bg-primary',
+			'group before:bg-primary relative flex flex-row items-center gap-1 before:absolute before:left-0 before:h-full',
 			!isDragging && !isSwiping && ' transition-transform'
 		)}
 		data-note-item
@@ -240,15 +248,15 @@
 			onValueChange={save}
 			debounce={500}
 			id="noteInputItem-{item.id}"
-			class="whitespace-normal text-wrap"
+			class="text-wrap whitespace-normal"
 		/>
 		<!-- More actions container -->
 		<div
-			class="absolute bottom-0 left-full top-0 ml-1 flex flex-row items-center gap-2"
+			class="absolute top-0 bottom-0 left-full ml-1 flex flex-row items-center gap-2"
 			bind:clientWidth={SWIPE_X_THRESHOLD}
 		>
 			<button
-				class="flex h-8 w-full flex-row items-center justify-center rounded bg-danger px-4 font-bold text-foreground"
+				class="bg-danger text-foreground flex h-8 w-full flex-row items-center justify-center rounded px-4 font-bold"
 				onclick={() => deleteItem(item)}
 			>
 				<Trash class="size-5" />
