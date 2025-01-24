@@ -3,6 +3,7 @@
 	import { List, Send, Text } from 'lucide-svelte';
 	import type { ActionData, PageData } from './$types';
 	import { enhance } from '$app/forms';
+	import Checkbox from '$lib/components/Checkbox/Checkbox.svelte';
 
 	let { data }: { data: PageData; form: ActionData } = $props();
 	const { user } = data;
@@ -26,7 +27,7 @@
 	<form
 		method="POST"
 		action="?/createNote"
-		class="relative mb-10 flex w-full flex-row gap-2"
+		class="relative flex w-full flex-row gap-2"
 		use:enhance={() => {
 			isCreatingNote = true;
 			return async ({ update }) => {
@@ -50,10 +51,27 @@
 		</Button>
 	</form>
 
-	<div class="flex flex-col gap-8">
+  <hr>
+
+	<div class="flex flex-col gap-2">
 		{#each user.notes as note}
 			<Card class="mb-4" href="/app/{user.username}/{note.id}">
 				<Card.Heading>{note.title}</Card.Heading>
+        {#if note.type === 'text'}
+          <p class="text-muted line-clamp-3 whitespace-pre-wrap">{note.content}</p>
+        {:else if note.type === 'list'}
+          <div class="max-h-[4.5rem] overflow-y-hidden relative">
+            {#each note.items as item}
+              <div class="flex flex-row gap-2 items-center h-6">
+                <Checkbox id="listNotePrevireCheckbox-{note.id}-{item.position}" checked={item.checked} disabled={true} />
+                <span class="text-muted">{item.item}</span>
+              </div>
+            {/each}
+            {#if note.items.length > 3}
+              <div class="absolute bottom-0 left-0 right-0 h-1/2 bg-gradient-to-b from-transparent to-card"></div>
+            {/if}
+          </div>
+        {/if}
 			</Card>
 		{/each}
 	</div>

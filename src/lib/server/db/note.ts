@@ -71,7 +71,7 @@ export async function addItemToListNote(
 	return result.insertId;
 }
 
-export async function saveListNote(note: ListNote): Promise<void> {
+async function saveListNote(note: ListNote): Promise<void> {
 	let query = 'UPDATE list_note_content SET item = ?, checked = ?, position = ? WHERE id = ?';
 	await Promise.all(
 		note.items.map((item) => db.execute(query, [item.item, item.checked, item.position, item.id]))
@@ -90,7 +90,7 @@ export async function saveListNote(note: ListNote): Promise<void> {
 	await Promise.all(newItems.map((item) => addItemToListNote(note.id, item.item, item.position)));
 }
 
-export async function saveTextNote(note: TextNote): Promise<void> {
+async function saveTextNote(note: TextNote): Promise<void> {
 	const query = 'UPDATE text_note_content SET content = ? WHERE note_id = ?';
 	await db.execute(query, [note.content, note.id]);
 }
@@ -101,6 +101,9 @@ export async function saveNote(note: Note): Promise<Note> {
 	} else if (note.type === 'text') {
 		await saveTextNote(note as TextNote);
 	}
+
+  const query = 'UPDATE note SET updatedAt = NOW() WHERE id = ?';
+	await db.execute(query, [note.id]);
 
 	note = (await getNote(note.id)) as Note;
 

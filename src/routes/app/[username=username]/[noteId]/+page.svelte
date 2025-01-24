@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import TextNoteComponent from './text-note.svelte';
-	import ListNoteComponent from './list-note.svelte';
+	import { Text as TextNoteComponent} from '$lib/components/core/note';
+	import { List as ListNoteComponent} from '$lib/components/core/note';
 	import type { TextNote, ListNote } from '$lib/types';
 	import { Input, Card } from '$lib/components';
 	import { ChevronLeft, Cloud, RefreshCcw } from 'lucide-svelte';

@@ -23,7 +23,7 @@
 	}: Props = $props();
 
 	const baseClasses =
-		'rounded transition-colors flex flex-row gap-2 w-fit items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed px-3 py-1 text-base font-sans font-medium';
+		'rounded transition-colors flex flex-row gap-2 w-fit items-center justify-center disabled:opacity-50 disabled:cursor-not-allowed px-3 py-1.5 text-medium font-sans font-medium';
 
 	const variantClasses = new Map<Variant, string>([
 		['primary', 'bg-primary text-foreground'],

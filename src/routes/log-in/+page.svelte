@@ -14,7 +14,7 @@
 		<form
 			action="?/logIn"
 			method="POST"
-			class="mt-6 flex flex-col gap-2"
+			class="mt-6 flex flex-col gap-2 w-full"
 			use:enhance={() => {
 				isSubmitting = true;
 				return async ({ update }) => {
