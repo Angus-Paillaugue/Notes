@@ -23,7 +23,7 @@
 		...restProps
 	}: SvelteHTMLElements['textarea'] & MyProps = $props();
 	const baseClasses =
-		'rounded disabled:cursor-not-allowed disabled:bg-secondary-light w-full bg-secondary border focus:outline-hidden outline-hidden focus:ring-2 transition-colors ring-primary test-foreground px-3 py-1 text-base font-sans font-normal resize-none';
+		'rounded disabled:cursor-not-allowed disabled:bg-card/50 w-full bg-card focus:outline-hidden outline-hidden focus:ring-2 transition-colors ring-primary text-foreground px-3 py-1 text-base font-sans font-normal resize-none';
 
 	const finalClasses = cn(baseClasses, className);
 

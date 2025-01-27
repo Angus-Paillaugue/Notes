@@ -1,26 +1,25 @@
 @import 'tailwindcss';
 
 @theme {
-	--color-border: hsl(211.76 14.29% 23.33%); /* #333b44 */
-	--color-background: hsl(214.29 25% 10.98%); /* #151b23 */
-	--color-foreground: hsl(223.64 31.43% 86.27%); /* #d1d7e7 */
-	--color-card: hsl(212 18.52% 15.88%); /* #212830 */
-
-	--color-secondary: hsl(216.67 17.65% 20%); /* #2a313c */
-	--color-secondary-light: hsl(212 18.52% 22.16%); /* #2e3843 */
+	--color-background: #010101;
+	--color-foreground: #ffffff;
+	--color-card: #1b1b1b;
+	--color-card-foreground: #252525;
 
 	--color-danger: hsl(3.12 74.76% 59.61%); /* #e5534b */
 	--color-muted: hsl(213.75 7.84% 60%); /* #9198a1 */
 
-	--color-primary: hsl(215.38 68.42% 55.29%); /* #3f7fdb */
+	--color-primary: #fe6802;
+	--color-primary-foreground: #f2893f;
 
 	--font-sans: Poppins, ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
 		'Segoe UI Symbol', 'Noto Color Emoji';
 	--font-mono: JetBrains Mono, ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
 		'Liberation Mono', 'Courier New', monospace;
 
-	--radius: 0.375rem;
-	--radius-lg: 0.75rem;
+	--radius-sm: 0.375rem;
+	--radius: 0.7rem;
+	--radius-lg: 1.25rem;
 }
 
 /*
@@ -37,7 +36,7 @@
 	::before,
 	::backdrop,
 	::file-selector-button {
-		border-color: var(--color-border, currentColor);
+		border-color: var(--color-card, currentColor);
 	}
 }
 
@@ -47,5 +46,5 @@ body {
 }
 
 hr {
-	@apply my-4;
+	@apply border-card my-4 border-b;
 }

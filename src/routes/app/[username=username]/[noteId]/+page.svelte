@@ -3,27 +3,30 @@
 	import { Text as TextNoteComponent } from '$lib/components/core/note';
 	import { List as ListNoteComponent } from '$lib/components/core/note';
 	import type { TextNote, ListNote } from '$lib/types';
-	import { Input, Card, Modal, Button } from '$lib/components';
-	import { Cloud, Pencil, RefreshCcw, Trash2 } from 'lucide-svelte';
+	import { Input, Modal } from '$lib/components';
+	import { Pin, PinOff, Trash2 } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
+	import { navNoteStates } from '$lib/stores';
 
 	let { data }: { data: PageData } = $props();
-  const { user } = data;
+	const { user } = data;
 	let note = $state(data.note);
 	let isSaving = $state(false);
 	let isMounted = $state(false);
-	let editNoteModalOpen = $state(false);
-  let saveAbortController = $state(new AbortController());
-  let isDeletingNote = $state<Boolean>(false);
+	let saveAbortController = $state(new AbortController());
+	let isDeletingNote = $state<boolean>(false);
+	$effect(() => {
+		$navNoteStates.isSaving = isSaving;
+	});
 
 	async function save() {
 		if (isSaving || !isMounted) return;
 		isSaving = true;
 
-    // Abort any ongoing save request
-    saveAbortController.abort();
-    saveAbortController = new AbortController();
+		// Abort any ongoing save request
+		saveAbortController.abort();
+		saveAbortController = new AbortController();
 
 		const url = `/api/note/${note.type}/save`;
 		const res = await fetch(url, {
@@ -34,7 +37,7 @@
 			body: JSON.stringify({
 				note
 			}),
-      signal: saveAbortController.signal
+			signal: saveAbortController.signal
 		});
 		if (!res.ok) {
 			console.error('Failed to save note');
@@ -55,32 +58,49 @@
 		isMounted = true;
 	});
 
-  async function deleteNote() {
-    if(isDeletingNote) return;
-    isDeletingNote = true;
+	async function deleteNote() {
+		if (isDeletingNote) return;
+		isDeletingNote = true;
 
-    const res = await fetch("/api/note/delete", {
-      method: 'DELETE',
-      headers: {
+		const res = await fetch('/api/note/delete', {
+			method: 'DELETE',
+			headers: {
 				'Content-Type': 'application/json'
 			},
-      body: JSON.stringify({ noteId: note.id })
-    });
-    const data = await res.json();
-    if (!res.ok) {
+			body: JSON.stringify({ noteId: note.id })
+		});
+		const data = await res.json();
+		if (!res.ok) {
 			console.error(data.message);
 			return;
 		}
-    goto('/app/'+user.username);
-  }
+		goto('/app/' + user.username);
+	}
+
+	async function pinNote() {
+		note.pinned = !note.pinned;
+		save();
+	}
 </script>
 
-<Modal bind:open={editNoteModalOpen}>
+<Modal bind:open={$navNoteStates.editModalOpen}>
 	<Modal.Heading>Edit note</Modal.Heading>
 	<div class="flex w-full flex-col gap-2">
 		<button
+			class="flex w-full flex-row items-center justify-start gap-2 rounded px-3 py-1 text-start transition-colors"
+			onclick={pinNote}
+		>
+			{#if note.pinned}
+				<PinOff class="size-4" />
+			{:else}
+				<Pin class="size-4" />
+			{/if}
+			{note.pinned ? 'Unpin' : ' Pin'}
+		</button>
+
+		<button
 			class="bg-danger/20 hover:bg-danger flex w-full flex-row items-center justify-start gap-2 rounded px-3 py-1 text-start transition-colors"
-      onclick={deleteNote}
+			onclick={deleteNote}
 		>
 			<Trash2 class="size-4" />
 			Delete Note
@@ -96,7 +116,7 @@
 		debounce={500}
 		onValueChange={save}
 		placeholder="Title"
-		class="h-12 text-2xl font-medium"
+		class="bg-transparant h-12 text-3xl font-medium"
 	/>
 
 	<!-- Main note components -->
@@ -107,22 +127,4 @@
 			<ListNoteComponent bind:note={note as ListNote} {save} />
 		{/if}
 	</div>
-
-	<!-- Footer -->
-	<Card class="w-full shrink-0 flex-row items-center justify-between">
-		<Button
-			variant={['icon', 'border']}
-			class="hover:bg-background"
-			onclick={() => (editNoteModalOpen = true)}
-		>
-			<Pencil class="size-full" />
-		</Button>
-		<div class="size-5">
-			{#if isSaving}
-				<RefreshCcw class="size-full" />
-			{:else}
-				<Cloud class="size-full" />
-			{/if}
-		</div>
-	</Card>
 </div>

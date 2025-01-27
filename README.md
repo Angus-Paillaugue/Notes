@@ -4,6 +4,7 @@
 - [x] Add links from log-in to sign-up and vice-versa
 - [x] Add abort controller to saving function to avoid race condition to avoid saving stale data.
 - [x] Add the ability to delete notes
+- [x] Add ability to pin notes
 - [ ] Make the dashboard notes content update when going back to it from a note page after updating it's content
 - [ ] Add toasts
 - [ ] Make it a webapp

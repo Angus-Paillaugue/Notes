@@ -22,14 +22,13 @@ export const handle = async ({ event, resolve }) => {
 		}
 	}
 
-  if(url.pathname.startsWith('/auth') && ('user' in locals)) {
-    throw redirect(303, '/app');
-  }
-
-  if (url.pathname.startsWith('/api') && !('user' in locals)) {
-		throw error(401, 'Unauthorized');
+	if (url.pathname.startsWith('/auth') && 'user' in locals) {
+		throw redirect(303, '/app');
 	}
 
+	if (url.pathname.startsWith('/api') && !('user' in locals)) {
+		throw error(401, 'Unauthorized');
+	}
 
 	return await resolve(event);
 };

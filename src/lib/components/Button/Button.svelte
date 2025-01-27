@@ -4,7 +4,7 @@
 	import { fade } from 'svelte/transition';
 	import Spinner from '../Spinner';
 
-	type Variant = 'primary' | 'secondary' | 'icon' | 'danger' | 'border';
+	type Variant = 'primary' | 'secondary' | 'icon' | 'danger' | 'foreground';
 
 	interface MyProps {
 		loading?: boolean;
@@ -27,13 +27,10 @@
 
 	const variantClasses = new Map<Variant, string>([
 		['primary', 'bg-primary text-foreground'],
-		['border', 'bg-transparent border border text-muted hover:bg-card focus:bg-card'],
-		[
-			'secondary',
-			'bg-secondary hover:bg-secondary-light focus:bg-secondary-light border text-foreground'
-		],
+		['secondary', 'bg-card hover:bg-card-foreground focus:bg-card-light text-foreground'],
 		['icon', 'hover:bg-secondary/50 focus:bg-secondary/50 text-foreground size-7 p-1'],
-		['danger', 'bg-secondary hover:bg-secondary-light focus:bg-secondary-light border text-danger']
+		['danger', 'bg-secondary hover:bg-secondary-light focus:bg-secondary-light text-danger'],
+		['foreground', 'bg-card-foreground text-foreground']
 	]);
 
 	const finalClasses = cn(

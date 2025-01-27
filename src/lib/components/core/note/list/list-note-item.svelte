@@ -14,9 +14,9 @@
 		focus: boolean;
 	}
 
-	let { item = $bindable(), deleteItem, save, focus, ondrop }: Props = $props();
+	let { item = $bindable(), deleteItem, save, focus = false, ondrop }: Props = $props();
 	let SWIPE_X_THRESHOLD = $state(0);
-	const MOBILE_ACTION_MISSHAPE_DELAY = 200;
+	const MOBILE_ACTION_MISSHAPE_DELAY = 150;
 
 	// DND on mobile
 	let touchTimeout = $state<ReturnType<typeof setTimeout>>();
@@ -71,6 +71,9 @@
 
 	// DND on desktop
 	function handleDragStart(event: DragEvent) {
+		if ((event.target as HTMLElement).closest('.drag-handle') === null) {
+			return;
+		}
 		// On drag start from dragging the row up or down
 		isDragging = true;
 		event.dataTransfer?.setData('text/plain', item.id.toString());
@@ -153,9 +156,12 @@
 	function handleDragStartRow(event: MouseEvent) {
 		// On mouse down from dragging the row to the side on desktop
 		if (isSwiping || isDragging) return;
+		if ((event.target as HTMLElement).closest('.drag-handle') !== null) {
+			return;
+		}
 		initialPosition = { x: event.clientX, y: event.clientY };
 		touchTimeout = setTimeout(() => {
-			if (isDragging) return;
+			if (isSwiping || isDragging) return;
 			isSwiping = true;
 		}, MOBILE_ACTION_MISSHAPE_DELAY + 1);
 	}
@@ -227,7 +233,7 @@
 		<!-- Drag handle -->
 		<button
 			draggable="true"
-			class="w-5 shrink-0 touch-none select-none"
+			class="drag-handle w-5 shrink-0 touch-none select-none"
 			ondragstart={handleDragStart}
 			ondragend={handleDragEnd}
 			ontouchstart={handleTouchStart}

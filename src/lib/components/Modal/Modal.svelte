@@ -85,11 +85,12 @@
 <svelte:window onmousemove={handleMouseMove} onmouseup={handleMouseUp} />
 
 <Backdrop bind:open />
+
 {#if open}
-	<div class="pointer-events-none fixed right-0 bottom-0 left-0 z-40 h-fit max-h-svh p-1">
+	<div class="pointer-events-none fixed right-0 bottom-0 left-0 z-40 h-fit max-h-svh p-2">
 		<div
 			class={cn(
-				'bg-card text-foreground pointer-events-auto mx-auto flex max-h-full max-w-screen-xl origin-bottom flex-col rounded border p-2',
+				'bg-card text-foreground pointer-events-auto mx-auto flex max-h-full max-w-screen-md origin-bottom flex-col rounded border p-3',
 				!isDragging && 'transition-transform'
 			)}
 			transition:fly={{ y: '100%', duration: TRANSITION_DURATION }}

@@ -1,9 +1,9 @@
 import type { PageServerLoad } from './$types';
 import { redirect } from '@sveltejs/kit';
 
-export const load = (async ({ locals, cookies}) => {
+export const load = (async ({ locals, cookies }) => {
 	locals.user = undefined;
-  cookies.delete('token', { path: '/' });
+	cookies.delete('token', { path: '/' });
 
-  throw redirect(303, '/auth/log-in');
+	throw redirect(303, '/auth/log-in');
 }) satisfies PageServerLoad;

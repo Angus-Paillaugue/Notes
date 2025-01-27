@@ -4,8 +4,9 @@
 
 	interface MyProps {
 		open: boolean;
+		duration?: number;
 	}
-	let { open = $bindable(false) }: MyProps = $props();
+	let { open = $bindable(false), duration = TRANSITION_DURATION }: MyProps = $props();
 
 	function handleWindowKeyDown(event: KeyboardEvent) {
 		if (event.key === 'Escape') {
@@ -24,6 +25,6 @@
 		aria-label="Close sidebar"
 		class="bg-background/50 fixed inset-0 z-40 backdrop-blur-xs"
 		onclick={() => (open = false)}
-		transition:fade={{ duration: TRANSITION_DURATION }}
+		transition:fade={{ duration }}
 	></div>
 {/if}

@@ -3,9 +3,9 @@ import type { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 import db from '.';
 import { getUser } from './user';
 
-export async function getUsersNote(user: User): Promise<Note[]> {
+export async function getUsersNote(id: User['id']): Promise<Note[]> {
 	const query = 'SELECT id FROM note WHERE user_id = ? ORDER BY id DESC';
-	const [rows] = await db.execute<RowDataPacket[]>(query, [user.id]);
+	const [rows] = await db.execute<RowDataPacket[]>(query, [id]);
 	const noteIds = rows.map((row) => row.id);
 	const notes = await Promise.all(noteIds.map(getNote));
 
@@ -20,7 +20,7 @@ export async function getNote(noteId: Note['id']): Promise<Note | null> {
 		return null;
 	}
 	const coreNote = rows[0] as CoreNote & { user_id: number };
-  coreNote.user = (await getUser(coreNote.user_id)) as User;
+	coreNote.user = (await getUser(coreNote.user_id)) as User;
 	if (coreNote.type === 'text') {
 		const [textRows] = await db.execute<RowDataPacket[]>(
 			'SELECT * FROM text_note_content WHERE note_id = ?',
@@ -86,8 +86,13 @@ async function saveListNote(note: ListNote): Promise<void> {
 
 	// Handle items to delete
 	const itemIds = note.items.map((item) => item.id);
-	query = `DELETE FROM list_note_content WHERE note_id = ? AND id NOT IN (${itemIds.map(() => '?').join(', ')})`; // Note that this solution is janky and not secure
-	await db.execute(query, [note.id, ...itemIds]);
+	if (itemIds.length > 0) {
+		query = `DELETE FROM list_note_content WHERE note_id = ? AND id NOT IN (${itemIds.map(() => '?').join(', ')})`; // Note that this solution is janky and not secure
+		await db.execute(query, [note.id, ...itemIds]);
+	} else {
+		query = `DELETE FROM list_note_content WHERE note_id = ?`;
+		await db.execute(query, [note.id]);
+	}
 
 	// Handle new items
 	const newItems = note.items.filter((item) => item.id === -1);
@@ -95,8 +100,10 @@ async function saveListNote(note: ListNote): Promise<void> {
 }
 
 async function saveTextNote(note: TextNote): Promise<void> {
-	const query = 'UPDATE text_note_content SET content = ? WHERE note_id = ?';
-	await db.execute(query, [note.content, note.id]);
+	await db.execute('UPDATE text_note_content SET content = ? WHERE note_id = ?', [
+		note.content,
+		note.id
+	]);
 }
 
 export async function saveNote(note: Note): Promise<Note> {
@@ -106,17 +113,17 @@ export async function saveNote(note: Note): Promise<Note> {
 		await saveTextNote(note as TextNote);
 	}
 
-	const query = 'UPDATE note SET updatedAt = NOW() WHERE id = ?';
-	await db.execute(query, [note.id]);
+	await db.execute('UPDATE note SET updatedAt = NOW(), pinned = ? WHERE id = ?', [
+		note.pinned ? 1 : 0,
+		note.id
+	]);
 
 	note = (await getNote(note.id)) as Note;
 
 	return note;
 }
 
-
 export async function deleteNote(id: Note['id']) {
 	// No need to delete all of the list items or text content because of the ON DELETE CASCADES constraint in the schema
-	const query = 'DELETE from note WHERE id = ?';
-	await db.execute(query, [id]);
+	await db.execute('DELETE from note WHERE id = ?', [id]);
 }

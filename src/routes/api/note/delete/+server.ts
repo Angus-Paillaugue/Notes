@@ -7,12 +7,12 @@ export const DELETE: RequestHandler = async ({ request, locals: { user } }) => {
 	const { noteId }: { noteId: Note['id'] } = await request.json();
 	const userId = user?.id as User['id'];
 
-  const note = await getNote(noteId);
-  if(note?.user.id !== userId) {
-    throw error(403, 'I know what you are trying to do and it\'s bad. Stop!')
-  }
+	const note = await getNote(noteId);
+	if (note?.user.id !== userId) {
+		throw error(403, "I know what you are trying to do and it's bad. Stop!");
+	}
 
-  await deleteNote(noteId);
+	await deleteNote(noteId);
 
 	return json({});
 };

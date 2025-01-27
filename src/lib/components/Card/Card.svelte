@@ -11,7 +11,7 @@
 
 <svelte:element
 	this={tagName}
-	class={cn('bg-card flex flex-col rounded-lg border p-4', className)}
+	class={cn('bg-card flex flex-col rounded-lg p-4', className)}
 	{...restProps}
 >
 	{@render children?.()}

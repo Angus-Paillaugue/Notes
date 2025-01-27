@@ -1,5 +1,5 @@
 export interface UserWithoutNotes {
-  id: number;
+	id: number;
 	username: string;
 	password: string;
 	createdAt: Date;
@@ -18,6 +18,7 @@ export interface CoreNote {
 	createdAt: Date;
 	updatedAt: Date;
 	user: User;
+	pinned: boolean;
 }
 
 export interface TextNote extends CoreNote {

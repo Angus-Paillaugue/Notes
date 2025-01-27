@@ -13,8 +13,10 @@
 	}
 
 	let { note = $bindable(), save }: Props = $props();
+	let focusLatest = $state(false);
 
 	function addListItem(checked = false) {
+		focusLatest = true;
 		note.items.push({
 			id: -1,
 			item: '',
@@ -57,15 +59,11 @@
 	<title>{note.title}</title>
 </svelte:head>
 
-<div class="bg-background text-foreground flex h-full w-full grow flex-col gap-2 overflow-x-hidden">
+<div class="flex h-full w-full grow flex-col gap-2 overflow-x-hidden">
 	<!-- Unchecked Items -->
 	<div class="flex flex-col">
 		<!-- Heading -->
-		<div class="my-2 flex w-full flex-row items-center gap-2">
-			<div class="h-0 w-full grow border-b"></div>
-			<h1 class="shrink-0 text-xl font-semibold">To Do</h1>
-			<div class="h-0 w-full grow border-b"></div>
-		</div>
+		<hr />
 
 		<!-- Items -->
 		<div class="flex flex-col gap-2 px-1">
@@ -78,7 +76,7 @@
 					ondragover={(e) => e.preventDefault()}
 				>
 					<ListNoteItemComponent
-						focus={i === note.items.length - 1}
+						focus={i === note.items.length - 1 && focusLatest}
 						item={note.items[i]}
 						ondrop={handleDrop}
 						{deleteItem}
