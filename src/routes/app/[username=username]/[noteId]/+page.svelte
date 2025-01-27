@@ -6,16 +6,24 @@
 	import { Input, Card, Modal, Button } from '$lib/components';
 	import { Cloud, Pencil, RefreshCcw, Trash2 } from 'lucide-svelte';
 	import { onMount } from 'svelte';
+	import { goto } from '$app/navigation';
 
 	let { data }: { data: PageData } = $props();
+  const { user } = data;
 	let note = $state(data.note);
 	let isSaving = $state(false);
 	let isMounted = $state(false);
-	let editNoteModalOpen = $state(true);
+	let editNoteModalOpen = $state(false);
+  let saveAbortController = $state(new AbortController());
+  let isDeletingNote = $state<Boolean>(false);
 
 	async function save() {
 		if (isSaving || !isMounted) return;
 		isSaving = true;
+
+    // Abort any ongoing save request
+    saveAbortController.abort();
+    saveAbortController = new AbortController();
 
 		const url = `/api/note/${note.type}/save`;
 		const res = await fetch(url, {
@@ -25,7 +33,8 @@
 			},
 			body: JSON.stringify({
 				note
-			})
+			}),
+      signal: saveAbortController.signal
 		});
 		if (!res.ok) {
 			console.error('Failed to save note');
@@ -45,6 +54,25 @@
 	onMount(() => {
 		isMounted = true;
 	});
+
+  async function deleteNote() {
+    if(isDeletingNote) return;
+    isDeletingNote = true;
+
+    const res = await fetch("/api/note/delete", {
+      method: 'DELETE',
+      headers: {
+				'Content-Type': 'application/json'
+			},
+      body: JSON.stringify({ noteId: note.id })
+    });
+    const data = await res.json();
+    if (!res.ok) {
+			console.error(data.message);
+			return;
+		}
+    goto('/app/'+user.username);
+  }
 </script>
 
 <Modal bind:open={editNoteModalOpen}>
@@ -52,6 +80,7 @@
 	<div class="flex w-full flex-col gap-2">
 		<button
 			class="bg-danger/20 hover:bg-danger flex w-full flex-row items-center justify-start gap-2 rounded px-3 py-1 text-start transition-colors"
+      onclick={deleteNote}
 		>
 			<Trash2 class="size-4" />
 			Delete Note

@@ -1,16 +1,5 @@
 import { auth } from '$lib/server/auth';
-import { isUsername } from '$lib/utils';
-import { error } from '@sveltejs/kit';
-
-const canUserNavigate = (path: string, loggedIn: boolean) => {
-	// Get the first element in path, if it's a username, check if the user is logged in
-	// If the user is not logged in, they can't navigate to a user's page
-	if (isUsername(path.slice(1).split('/')[0]) && !loggedIn) {
-		return false;
-	}
-
-	return true;
-};
+import { error, redirect } from '@sveltejs/kit';
 
 export const handle = async ({ event, resolve }) => {
 	const { cookies, locals, url } = event;
@@ -33,9 +22,14 @@ export const handle = async ({ event, resolve }) => {
 		}
 	}
 
-	if (!canUserNavigate(url.pathname, 'user' in locals)) {
+  if(url.pathname.startsWith('/auth') && ('user' in locals)) {
+    throw redirect(303, '/app');
+  }
+
+  if (url.pathname.startsWith('/api') && !('user' in locals)) {
 		throw error(401, 'Unauthorized');
 	}
+
 
 	return await resolve(event);
 };

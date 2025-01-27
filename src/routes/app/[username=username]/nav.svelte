@@ -15,7 +15,7 @@
 
 <Sidebar bind:open={sidebarOpen} />
 
-<div class="mx-auto w-full max-w-screen-2xl shrink-0 p-2">
+<div class="mx-auto w-full max-w-screen-xl shrink-0 p-2">
 	<div class="bg-card h-12 w-full overflow-hidden rounded-lg border">
 		<div class="flex h-full w-full flex-row items-center justify-between p-2">
 			{#if backButtonShown}

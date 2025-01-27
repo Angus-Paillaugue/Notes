@@ -37,7 +37,7 @@
 
 		<p class="mt-4 text-sm">
 			Already have an account?
-			<Link href="/log-in">Log-in</Link>
+			<Link href="/auth/log-in">Log-in</Link>
 		</p>
 	</Card>
 </div>

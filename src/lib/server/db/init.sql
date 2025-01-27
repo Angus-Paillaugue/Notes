@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `text_note_content` (
   `note_id` INT NOT NULL,
   `content` TEXT NOT NULL,
   PRIMARY KEY (`note_id`),
-  FOREIGN KEY (`note_id`) REFERENCES `note`(`id`)
+  FOREIGN KEY (`note_id`) REFERENCES `note`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 CREATE TABLE IF NOT EXISTS `list_note_content` (
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS `list_note_content` (
   `position` INT NOT NULL,
   `checked` BOOLEAN NOT NULL DEFAULT 0,
   `note_id` INT NOT NULL,
-  FOREIGN KEY (`note_id`) REFERENCES `note`(`id`)
+  FOREIGN KEY (`note_id`) REFERENCES `note`(`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 

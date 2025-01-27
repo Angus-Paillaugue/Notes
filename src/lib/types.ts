@@ -1,8 +1,11 @@
-export interface User {
-	id: number;
+export interface UserWithoutNotes {
+  id: number;
 	username: string;
 	password: string;
 	createdAt: Date;
+}
+
+export interface User extends UserWithoutNotes {
 	notes: Note[];
 }
 

@@ -1,6 +1,7 @@
 import type { User, Note, CoreNote, ListNoteItem, ListNote, TextNote } from '$lib/types';
 import type { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
 import db from '.';
+import { getUser } from './user';
 
 export async function getUsersNote(user: User): Promise<Note[]> {
 	const query = 'SELECT id FROM note WHERE user_id = ? ORDER BY id DESC';
@@ -18,7 +19,8 @@ export async function getNote(noteId: Note['id']): Promise<Note | null> {
 	if (rows.length === 0) {
 		return null;
 	}
-	const coreNote = rows[0] as CoreNote;
+	const coreNote = rows[0] as CoreNote & { user_id: number };
+  coreNote.user = (await getUser(coreNote.user_id)) as User;
 	if (coreNote.type === 'text') {
 		const [textRows] = await db.execute<RowDataPacket[]>(
 			'SELECT * FROM text_note_content WHERE note_id = ?',
@@ -110,4 +112,11 @@ export async function saveNote(note: Note): Promise<Note> {
 	note = (await getNote(note.id)) as Note;
 
 	return note;
+}
+
+
+export async function deleteNote(id: Note['id']) {
+	// No need to delete all of the list items or text content because of the ON DELETE CASCADES constraint in the schema
+	const query = 'DELETE from note WHERE id = ?';
+	await db.execute(query, [id]);
 }
