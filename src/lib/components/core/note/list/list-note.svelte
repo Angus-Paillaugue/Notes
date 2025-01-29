@@ -55,10 +55,6 @@
 	}
 </script>
 
-<svelte:head>
-	<title>{note.title}</title>
-</svelte:head>
-
 <div class="flex h-full w-full grow flex-col gap-2 overflow-x-hidden">
 	<!-- Unchecked Items -->
 	<div class="flex flex-col">

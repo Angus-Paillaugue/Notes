@@ -4,7 +4,7 @@
 	import { List as ListNoteComponent } from '$lib/components/core/note';
 	import type { TextNote, ListNote } from '$lib/types';
 	import { Input, Modal } from '$lib/components';
-	import { Pin, PinOff, Trash2 } from 'lucide-svelte';
+	import { Pin, PinOff, Share, Trash2 } from 'lucide-svelte';
 	import { onMount } from 'svelte';
 	import { goto } from '$app/navigation';
 	import { navNoteStates } from '$lib/stores';
@@ -16,6 +16,8 @@
 	let isMounted = $state(false);
 	let saveAbortController = $state(new AbortController());
 	let isDeletingNote = $state<boolean>(false);
+	let shareModalOpen = $state(false);
+
 	$effect(() => {
 		$navNoteStates.isSaving = isSaving;
 	});
@@ -77,17 +79,35 @@
 		goto('/app/' + user.username);
 	}
 
-	async function pinNote() {
+	function pinNote() {
 		note.pinned = !note.pinned;
 		save();
 	}
 </script>
 
+<svelte:head>
+	<title>{note.title}</title>
+</svelte:head>
+
+<Modal bind:open={shareModalOpen} onclose={() => ($navNoteStates.editModalOpen = false)}>
+	<Modal.Heading>Share note</Modal.Heading>
+</Modal>
+
 <Modal bind:open={$navNoteStates.editModalOpen}>
 	<Modal.Heading>Edit note</Modal.Heading>
 	<div class="flex w-full flex-col gap-2">
 		<button
-			class="flex w-full flex-row items-center justify-start gap-2 rounded px-3 py-1 text-start transition-colors"
+			class="hover:bg-card-foreground flex w-full flex-row items-center justify-start gap-2 rounded px-3 py-1 text-start transition-colors"
+			onclick={() => {
+				shareModalOpen = true;
+				$navNoteStates.editModalOpen = false;
+			}}
+		>
+			<Share class="size-4" />
+			Share
+		</button>
+		<button
+			class="hover:bg-card-foreground flex w-full flex-row items-center justify-start gap-2 rounded px-3 py-1 text-start transition-colors"
 			onclick={pinNote}
 		>
 			{#if note.pinned}

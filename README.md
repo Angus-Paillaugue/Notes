@@ -6,7 +6,7 @@
 - [x] Add the ability to delete notes
 - [x] Add ability to pin notes
 - [ ] Make the dashboard notes content update when going back to it from a note page after updating it's content
-- [ ] Add toasts
+- [x] Add toasts
 - [ ] Make it a webapp
 - [ ] Make a homepage
 - [ ] Make an error page

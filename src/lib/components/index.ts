@@ -6,3 +6,4 @@ export { default as Link } from './Link';
 export { default as Modal } from './Modal';
 export { default as Select } from './Select';
 export { default as Spinner } from './Spinner';
+export { default as Toaster } from './Toaster';

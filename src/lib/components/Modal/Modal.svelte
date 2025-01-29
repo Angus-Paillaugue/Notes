@@ -4,6 +4,7 @@
 	import { fly } from 'svelte/transition';
 	import { TRANSITION_DURATION } from '.';
 	import { cn } from '$lib/utils';
+	import { backInOut } from 'svelte/easing';
 
 	interface MyProps {
 		open: boolean;
@@ -93,7 +94,7 @@
 				'bg-card text-foreground pointer-events-auto mx-auto flex max-h-full max-w-screen-md origin-bottom flex-col rounded border p-3',
 				!isDragging && 'transition-transform'
 			)}
-			transition:fly={{ y: '100%', duration: TRANSITION_DURATION }}
+			transition:fly={{ y: '100%', duration: TRANSITION_DURATION, easing: backInOut }}
 			bind:this={modalCard}
 			style:transform={`translateY(${swipeY >= 0 ? swipeY : 0}px) scaleY(${swipeY < 0 ? -swipeY * 0.0002 + 1 : 1})`}
 			style:max-height={`${fullScreen ? '100%' : 'calc(70svh - .5rem'}`}

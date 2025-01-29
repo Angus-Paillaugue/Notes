@@ -2,8 +2,15 @@
 	import type { Snippet } from 'svelte';
 	import type { LayoutData } from './$types';
 	import Nav from './nav.svelte';
+	import { afterNavigate } from '$app/navigation';
+	import { navNoteStates } from '$lib/stores';
 
 	let { children }: { data: LayoutData; children: Snippet } = $props();
+
+	afterNavigate(() => {
+		$navNoteStates.editModalOpen = false;
+		$navNoteStates.isSaving = false;
+	});
 </script>
 
 <div class="flex min-h-svh w-full grow flex-col">

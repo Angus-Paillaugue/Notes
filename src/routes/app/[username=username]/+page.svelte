@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { Button, Card, Input, Select } from '$lib/components';
+	import { Button, Card, Input, Select, Checkbox } from '$lib/components';
 	import { List, Pin, Send, Text } from 'lucide-svelte';
 	import type { ActionData, PageData } from './$types';
 	import { enhance } from '$app/forms';
-	import Checkbox from '$lib/components/Checkbox/Checkbox.svelte';
 	import type { Note } from '$lib/types';
 
 	let { data }: { data: PageData; form: ActionData } = $props();
@@ -65,7 +64,7 @@
 	</Card>
 {/snippet}
 
-<div class="mx-auto flex w-full max-w-xl grow flex-col">
+<div class="mx-auto flex w-full max-w-screen-md grow flex-col">
 	<form
 		method="POST"
 		action="?/createNote"
@@ -124,6 +123,7 @@
 
 	<!-- If no notes -->
 	{#if user.notes.length === 0}
+		<div class="my-6 w-full border-b"></div>
 		<Card><Card.Heading>No notes found</Card.Heading>You can create one above</Card>
 	{/if}
 </div>

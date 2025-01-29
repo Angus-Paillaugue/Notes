@@ -36,19 +36,17 @@
 <!-- So, wrapping it into a non SSR component seems to fix it. -->
 <!-- Will need to investigate more thoroughly when I have time -->
 {#if mounted}
-	<div class="inline-flex items-center">
-		<label class="relative flex cursor-pointer items-center" for={id}>
-			<input {id} type="checkbox" class={classes} bind:checked {...restProps} />
-			{#if checked}
-				<span
-					class="text-foreground pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform peer-disabled:opacity-70"
-					transition:scale={{ duration: 150 }}
-				>
-					<Check class="size-3.5" strokeWidth={3} />
-				</span>
-			{/if}
-		</label>
-	</div>
+	<label class="relative inline-flex cursor-pointer items-center" for={id}>
+		<input {id} type="checkbox" class={classes} bind:checked {...restProps} />
+		{#if checked}
+			<span
+				class="text-foreground pointer-events-none absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transform peer-disabled:opacity-70"
+				transition:scale={{ duration: 150 }}
+			>
+				<Check class="size-3.5" strokeWidth={3} />
+			</span>
+		{/if}
+	</label>
 {:else}
 	<div
 		class={cn(
