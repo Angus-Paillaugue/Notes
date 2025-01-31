@@ -5,7 +5,7 @@
 <div class="fixed top-0 right-0 left-0 z-30 w-full p-4">
 	<div class="bg-background mx-auto flex max-w-screen-xl flex-row items-center rounded p-2">
 		<div class="ml-auto flex flex-row items-center gap-2">
-			<Button href="/auth/log-in" variant="border">Log in</Button>
+			<Button href="/auth/log-in" variant="foreground">Log in</Button>
 			<Button href="/auth/sign-up" variant="primary" class="border border-white bg-white text-black"
 				>Sign up</Button
 			>

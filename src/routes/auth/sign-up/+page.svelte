@@ -1,10 +1,17 @@
 <script>
 	import { Card, Button, Input, Link } from '$lib/components';
 	import { enhance } from '$app/forms';
+	import { toast } from '$lib/stores';
 
 	let { form } = $props();
 
 	let isSubmitting = $state(false);
+
+  $effect(() => {
+		if(form && form.message) {
+      toast.error(form.message);
+    }
+	})
 </script>
 
 <div class="mx-auto w-full max-w-xl grow">
@@ -29,10 +36,6 @@
 			<Button type="submit" loading={isSubmitting} class="mt-4 w-full" variant="primary"
 				>Sign-up</Button
 			>
-
-			{#if form && form.message}
-				<p class="mt-2 text-sm text-red-500">{form.message}</p>
-			{/if}
 		</form>
 
 		<p class="mt-4 text-sm">

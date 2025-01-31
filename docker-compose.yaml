@@ -1,0 +1,33 @@
+services:
+  frontend:
+    image: note_frontend:latest
+    container_name: note_frontend
+    build:
+      context: .
+      dockerfile: Dockerfile
+    user: "node"
+    environment:
+      NODE_ENV: production
+      HOST: '0.0.0.0'
+      ORIGIN: 'http://localhost:3000'
+      PORT: 3000
+      MYSQL_HOST: db
+    env_file:
+      - .env
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+
+
+  db:
+    image: mysql
+    restart: always
+    container_name: note_db
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+    volumes:
+      - ./mysql:/var/lib/mysql
+      - ./src/lib/server/db/init.sql:/docker-entrypoint-initdb.d/database.sql
