@@ -19,6 +19,7 @@ export interface CoreNote {
 	updatedAt: Date;
 	user: User;
 	pinned: boolean;
+  public: boolean;
 }
 
 export interface TextNote extends CoreNote {

@@ -9,13 +9,15 @@
 
 	interface Props {
 		note: ListNote;
+    isOwner: boolean;
 		save: () => void;
 	}
 
-	let { note = $bindable(), save }: Props = $props();
+	let { note = $bindable(), isOwner, save }: Props = $props();
 	let focusLatest = $state(false);
 
 	function addListItem(checked = false) {
+    if(!isOwner) return;
 		focusLatest = true;
 		note.items.push({
 			id: -1,
@@ -27,11 +29,13 @@
 	}
 
 	function deleteItem(item: ListNoteItem) {
+    if(!isOwner) return;
 		note.items = note.items.filter((i) => i.id !== item.id);
 		save();
 	}
 
 	function handleDrop(draggedItemId: string, targetItemId: string) {
+    if(!isOwner) return;
 		if (draggedItemId && targetItemId) {
 			const draggedItem = note.items.find((item) => item.id === parseInt(draggedItemId));
 			const targetItem = note.items.find((item) => item.id === parseInt(targetItemId));
@@ -75,6 +79,7 @@
 						focus={i === note.items.length - 1 && focusLatest}
 						item={note.items[i]}
 						ondrop={handleDrop}
+            {isOwner}
 						{deleteItem}
 						{save}
 					/>
@@ -84,8 +89,10 @@
 	</div>
 
 	<!-- Add item to list -->
-	<Button variant="secondary" class="mt-4 w-full" onclick={() => addListItem(false)}>
-		<Plus class="size-5" />
-		Add Item
-	</Button>
+  {#if isOwner}
+    <Button variant="secondary" class="mt-4 w-full" onclick={() => addListItem(false)}>
+      <Plus class="size-5" />
+      Add Item
+    </Button>
+  {/if}
 </div>

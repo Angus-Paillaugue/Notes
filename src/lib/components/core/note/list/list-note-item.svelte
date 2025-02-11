@@ -10,11 +10,12 @@
 		item: ListNoteItem;
 		deleteItem: (item: ListNoteItem) => void;
 		save: () => void;
+    isOwner: boolean;
 		ondrop?: (draggedId: string, targetId: string) => void;
 		focus: boolean;
 	}
 
-	let { item = $bindable(), deleteItem, save, focus = false, ondrop }: Props = $props();
+	let { item = $bindable(), isOwner, deleteItem, save, focus = false, ondrop }: Props = $props();
 	let SWIPE_X_THRESHOLD = $state(0);
 	const MOBILE_ACTION_MISSHAPE_DELAY = 150;
 
@@ -26,7 +27,7 @@
 	let isDragging = $state(false);
 	let isSwiping = $state(false);
 	function handleTouchStart(event: TouchEvent) {
-		if (isDragging || isSwiping) return;
+		if (isDragging || isSwiping || !isOwner) return;
 		// Prevent scrolling while dragging
 		event.preventDefault();
 		event.stopPropagation();
@@ -36,7 +37,7 @@
 		}, MOBILE_ACTION_MISSHAPE_DELAY);
 	}
 	function handleTouchMove(event: TouchEvent) {
-		if (!isDragging || isSwiping) return;
+		if (!isDragging || isSwiping || !isOwner) return;
 		event.preventDefault();
 		event.stopPropagation();
 		currentPosition = { x: event.touches[0].clientX, y: event.touches[0].clientY };
@@ -52,7 +53,7 @@
 	}
 	function handleTouchEnd(event: TouchEvent) {
 		clearTimeout(touchTimeout);
-		if (!isDragging || isSwiping) return;
+		if (!isDragging || isSwiping || !isOwner) return;
 
 		event.preventDefault();
 		event.stopPropagation();
@@ -71,7 +72,7 @@
 
 	// DND on desktop
 	function handleDragStart(event: DragEvent) {
-		if ((event.target as HTMLElement).closest('.drag-handle') === null) {
+		if ((event.target as HTMLElement).closest('.drag-handle') === null || !isOwner) {
 			return;
 		}
 		// On drag start from dragging the row up or down
@@ -81,13 +82,13 @@
 	}
 	function handleDragEnd(event: DragEvent) {
 		// On drag end from dragging the row up or down
-		if (isSwiping) return;
+		if (isSwiping || !isOwner) return;
 		isDragging = false;
 		(event.currentTarget as HTMLElement).classList.remove('drop-target'); // Ensure cleanup
 	}
 	function handleDragOver(event: DragEvent) {
 		// On drag over another row from dragging the row up or down
-		if (isSwiping) return;
+		if (isSwiping || !isOwner) return;
 		event.preventDefault();
 		const draggedId = event.dataTransfer?.getData('text/plain');
 		// Only show drop indicator if not dragging over self
@@ -99,13 +100,13 @@
 	}
 	function handleDragLeave(event: DragEvent) {
 		// On drag leave from dragging the row up or down
-		if (isSwiping) return;
+		if (isSwiping || !isOwner) return;
 		(event.currentTarget as HTMLElement).classList.remove('drop-target');
 		isDragging = false;
 	}
 	function handleDrop(event: DragEvent) {
 		// On drop from dragging the row up or down
-		if (isSwiping) return;
+		if (isSwiping || !isOwner) return;
 		event.preventDefault();
 		isDragging = false;
 		(event.currentTarget as HTMLElement).classList.remove('drop-target'); // Reset before dispatch
@@ -118,7 +119,7 @@
 	// Side swipe to open more options on mobile
 	function handleTouchStartRow(event: TouchEvent) {
 		// On touch start from swiping the row to the side on mobile
-		if (isSwiping) return;
+		if (isSwiping || !isOwner) return;
 		initialPosition = { x: event.touches[0].clientX, y: event.touches[0].clientY };
 		touchTimeout = setTimeout(() => {
 			isSwiping = true;
@@ -126,7 +127,7 @@
 	}
 	function handleTouchMoveRow(event: TouchEvent) {
 		// On touch move from swiping the row to the side on mobile
-		if (!initialPosition || !isSwiping) return;
+		if (!initialPosition || !isSwiping || !isOwner) return;
 
 		currentPosition = { x: event.touches[0].clientX, y: event.touches[0].clientY };
 		const moveX = currentPosition.x - initialPosition.x;
@@ -140,7 +141,7 @@
 	}
 	function handleTouchEndRow() {
 		// On touch end from swiping the row to the side on mobile
-		if (!isSwiping) {
+		if (!isSwiping || !isOwner) {
 			clearTimeout(touchTimeout);
 			return;
 		}
@@ -155,7 +156,7 @@
 	// Side swipe to open more options on desktop
 	function handleDragStartRow(event: MouseEvent) {
 		// On mouse down from dragging the row to the side on desktop
-		if (isSwiping || isDragging) return;
+		if (isSwiping || isDragging || !isOwner) return;
 		if ((event.target as HTMLElement).closest('.drag-handle') !== null) {
 			return;
 		}
@@ -167,7 +168,7 @@
 	}
 	function handleDragMoveRow(event: MouseEvent) {
 		// On mouse move from dragging the row to the side on desktop
-		if (!initialPosition || !isSwiping) return;
+		if (!initialPosition || !isSwiping || !isOwner) return;
 
 		currentPosition = { x: event.clientX, y: event.clientY };
 		const moveX = currentPosition.x - initialPosition.x;
@@ -181,7 +182,7 @@
 	}
 	function handleDragEndRow() {
 		// On mouse up from dragging the row to the side on desktop
-		if (!isSwiping || isDragging) {
+		if (!isSwiping || isDragging || !isOwner) {
 			clearTimeout(touchTimeout);
 			return;
 		}
@@ -201,7 +202,7 @@
 	});
 
 	onMount(() => {
-		if (focus) {
+		if (focus && isOwner) {
 			const input = document.getElementById(`noteInputItem-${item.id}`) as HTMLTextAreaElement;
 			input.focus();
 		}
@@ -230,22 +231,25 @@
 		onmousemove={handleDragMoveRow}
 		style:transform={`translateX(${swipeX}px)`}
 	>
-		<!-- Drag handle -->
-		<button
-			draggable="true"
-			class="drag-handle w-5 shrink-0 touch-none select-none"
-			ondragstart={handleDragStart}
-			ondragend={handleDragEnd}
-			ontouchstart={handleTouchStart}
-			ontouchmove={handleTouchMove}
-			ontouchend={handleTouchEnd}
-		>
-			<GripVertical class="size-5 cursor-move" />
-		</button>
+    {#if isOwner}
+      <!-- Drag handle -->
+      <button
+        draggable="true"
+        class="drag-handle w-5 shrink-0 touch-none select-none"
+        ondragstart={handleDragStart}
+        ondragend={handleDragEnd}
+        ontouchstart={handleTouchStart}
+        ontouchmove={handleTouchMove}
+        ontouchend={handleTouchEnd}
+      >
+        <GripVertical class="size-5 cursor-move" />
+      </button>
+    {/if}
 		<Checkbox
 			bind:checked={item.checked}
 			id="noteCheckboxItem-{item.id}"
 			onchange={save}
+      disabled={!isOwner}
 			class="shrink-0"
 		/>
 		<Input.Textarea
@@ -253,6 +257,7 @@
 			bind:value={item.item}
 			onValueChange={save}
 			debounce={500}
+      disabled={!isOwner}
 			id="noteInputItem-{item.id}"
 			class="text-wrap whitespace-normal"
 		/>

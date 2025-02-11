@@ -95,7 +95,7 @@
 </script>
 
 <div
-	class="bg-card text-foreground group relative flex flex-row items-center gap-2 overflow-hidden rounded-t-lg p-4"
+	class="bg-card text-foreground group relative flex flex-row items-center gap-2 overflow-hidden rounded-lg p-4"
 	bind:this={toastComponent}
 >
 	<!-- Icon -->

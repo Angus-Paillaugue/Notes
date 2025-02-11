@@ -12,8 +12,9 @@ USE `note`;
 
 -- User: The user that will be used to connect to the database by the front and back end
 DROP USER IF EXISTS 'note'@'%';
-CREATE USER 'note'@'%' IDENTIFIED BY 'note';
-GRANT ALL PRIVILEGES ON note.* TO 'note'@'%';
+CREATE USER 'note'@'%' IDENTIFIED BY 'MYSQL_PASSWORD';
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON note.* TO 'note'@'%';
 FLUSH PRIVILEGES;
 
 

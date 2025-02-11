@@ -5,6 +5,7 @@
 
 	interface Props {
 		note: TextNote;
+		isOwner: boolean;
 		save: () => void;
 	}
 

@@ -2,6 +2,7 @@ import { createNote } from '$lib/server/db/note';
 import type { Note } from '$lib/types';
 import { fail, redirect, type Actions } from '@sveltejs/kit';
 
+
 export const actions: Actions = {
 	createNote: async ({ request, locals: { user } }) => {
 		const formData = Object.fromEntries(await request.formData());

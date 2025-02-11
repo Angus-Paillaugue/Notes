@@ -1,10 +1,10 @@
 import type { User, UserWithoutNotes } from '$lib/types';
 import type { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
-import {getDbConnection} from '.';
+import {Database} from '.';
 import { getUsersNote } from './note';
 
 export async function createUser(username: User['username'], password: User['password']) {
-  const db = await getDbConnection();
+  const db = await Database.getConnection();
 	await db.execute<ResultSetHeader>('INSERT INTO user (username, password) VALUES (?, ?)', [
 		username,
 		password
@@ -12,7 +12,7 @@ export async function createUser(username: User['username'], password: User['pas
 }
 
 export async function getUser(id: User['id']) {
-  const db = await getDbConnection();
+  const db = await Database.getConnection();
 	const [rows] = await db.execute<RowDataPacket[]>('SELECT * FROM user WHERE id = ? LIMIT 1', [id]);
 	if (rows.length === 0) return null;
 	const user = rows[0] as UserWithoutNotes;
@@ -30,7 +30,7 @@ export async function getUserById(id: User['id']) {
 }
 
 export async function getUserByUsername(username: User['username']) {
-  const db = await getDbConnection();
+  const db = await Database.getConnection();
 	const [rows] = await db.execute<RowDataPacket[]>(
 		'SELECT * FROM user WHERE username = ? LIMIT 1',
 		[username]

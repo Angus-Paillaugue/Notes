@@ -1,10 +1,10 @@
 import type { User, Note, CoreNote, ListNoteItem, ListNote, TextNote } from '$lib/types';
 import type { ResultSetHeader, RowDataPacket } from 'mysql2/promise';
-import {getDbConnection} from '.';
+import { Database } from '.';
 import { getUser } from './user';
 
 export async function getUsersNote(id: User['id']): Promise<Note[]> {
-  const db = await getDbConnection();
+  const db = await Database.getConnection();
 	const query = 'SELECT id FROM note WHERE user_id = ? ORDER BY id DESC';
 	const [rows] = await db.execute<RowDataPacket[]>(query, [id]);
 	const noteIds = rows.map((row) => row.id);
@@ -14,7 +14,7 @@ export async function getUsersNote(id: User['id']): Promise<Note[]> {
 }
 
 export async function getNote(noteId: Note['id']): Promise<Note | null> {
-  const db = await getDbConnection();
+  const db = await Database.getConnection();
 	const query = 'SELECT * FROM note WHERE id = ?';
 
 	const [rows] = await db.execute<RowDataPacket[]>(query, [noteId]);
@@ -57,7 +57,7 @@ export async function createNote(
 	type: CoreNote['type']
 ): Promise<Note['id']> {
 	let query = 'INSERT INTO note (user_id, title, type) VALUES (?, ?, ?)';
-  const db = await getDbConnection();
+  const db = await Database.getConnection();
 	const [result] = await db.execute<ResultSetHeader>(query, [user.id, title, type]);
 	if (type === 'text') {
 		query = "INSERT INTO text_note_content (note_id, content) VALUES (?, '')";
@@ -74,14 +74,14 @@ export async function addItemToListNote(
 	position: ListNoteItem['position']
 ): Promise<ListNoteItem['id']> {
 	const query = 'INSERT INTO list_note_content (note_id, item, position) VALUES (?, ?, ?)';
-  const db = await getDbConnection();
+  const db = await Database.getConnection();
 	const [result] = await db.execute<ResultSetHeader>(query, [noteId, item, position]);
 	return result.insertId;
 }
 
 async function saveListNote(note: ListNote): Promise<void> {
 	let query = 'UPDATE list_note_content SET item = ?, checked = ?, position = ? WHERE id = ?';
-  const db = await getDbConnection();
+  const db = await Database.getConnection();
 	await Promise.all(
 		note.items.map((item) => db.execute(query, [item.item, item.checked, item.position, item.id]))
 	);
@@ -105,7 +105,7 @@ async function saveListNote(note: ListNote): Promise<void> {
 }
 
 async function saveTextNote(note: TextNote): Promise<void> {
-  const db = await getDbConnection();
+  const db = await Database.getConnection();
 	await db.execute('UPDATE text_note_content SET content = ? WHERE note_id = ?', [
 		note.content,
 		note.id
@@ -118,11 +118,12 @@ export async function saveNote(note: Note): Promise<Note> {
 	} else if (note.type === 'text') {
 		await saveTextNote(note as TextNote);
 	}
-  const db = await getDbConnection();
+  const db = await Database.getConnection();
 
-	await db.execute('UPDATE note SET updatedAt = NOW(), pinned = ? WHERE id = ?', [
+	await db.execute('UPDATE note SET updatedAt = NOW(), pinned = ?, public = ? WHERE id = ?', [
 		note.pinned ? 1 : 0,
-		note.id
+		note.id,
+    note.public ? 1 : 0
 	]);
 
 	note = (await getNote(note.id)) as Note;
@@ -131,7 +132,7 @@ export async function saveNote(note: Note): Promise<Note> {
 }
 
 export async function deleteNote(id: Note['id']) {
-  const db = await getDbConnection();
+  const db = await Database.getConnection();
 	// No need to delete all of the list items or text content because of the ON DELETE CASCADES constraint in the schema
 	await db.execute('DELETE from note WHERE id = ?', [id]);
 }
