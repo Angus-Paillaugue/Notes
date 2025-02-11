@@ -6,3 +6,4 @@ Dockerfile
 pnpm-lock.yaml
 mysql
 config
+scripts

@@ -13,11 +13,11 @@ export const handle = async ({ event, resolve }) => {
 				locals.user = user;
 			} else {
 				cookies.delete('token', { path: '/' });
-				delete locals.user;
+        locals.user = undefined;
 			}
 			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		} catch (_error) {
-			delete locals.user;
+			locals.user = undefined;
 			cookies.delete('token', { path: '/' });
 		}
 	}

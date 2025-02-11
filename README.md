@@ -22,6 +22,12 @@
 
 # Running
 ```bash
-source <(curl -s https://raw.githubusercontent.com/Angus-Paillaugue/Notes/refs/heads/main/run.sh)
-
+curl -s https://raw.githubusercontent.com/Angus-Paillaugue/Notes/refs/heads/main/run.sh -o run.sh
+chmod +x ./run.sh
+./run.sh
 ```
+
+
+# Contributing
+To dev on the project, clone the repository, then run the `./scripts/build-dev.sh` script to initialize the required environment variables.
+You can then take a look at the `package.json` file to run the dev server.

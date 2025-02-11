@@ -21,7 +21,7 @@
 	let innerType = $state(type); // Used to toggle password visibility
 	const classes = {
 		label:
-			'absolute text-sm text-muted duration-300 transform -translate-y-4 scale-75 top-4 z-10 origin-[0] start-2.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:text-primary peer-focus:scale-75 peer-focus:-translate-y-4 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto',
+			'absolute text-sm text-muted duration-300 transform -translate-y-3 scale-75 top-4 z-10 origin-[0] start-2.5 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:text-primary peer-focus:scale-75 peer-focus:-translate-y-3 ltr:peer-focus:translate-x-1 ltr:translate-x-1 rtl:peer-focus:translate-x-1/4 rtl:peer-focus:left-auto',
 		input: cn(
 			'block rounded-t-lg px-2.5 pb-2.5 pt-5 w-full bg-card-foreground border border-b-background appearance-none text-foreground peer border-b-2 transition-colors text-base font-sans font-normal focus:outline-hidden focus:ring-0 focus:border-b-primary',
 			className

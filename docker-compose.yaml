@@ -1,6 +1,6 @@
 services:
   frontend:
-    image: note_frontend:latest
+    image: anguspllg/note:latest
     container_name: note_frontend
     build:
       context: .
@@ -9,7 +9,7 @@ services:
     environment:
       NODE_ENV: production
       HOST: '0.0.0.0'
-      ORIGIN: 'http://localhost:3000'
+      ORIGIN: 'http://localhost:3000' # Change with your public IP/domain name. Ex : https://note.domain.com
       PORT: 3000
     env_file:
       - .env
@@ -17,9 +17,8 @@ services:
     ports:
       - "3000:3000"
 
-
   db:
-    image: mysql
+    image: mysql:latest
     restart: always
     container_name: note_db
     env_file:
