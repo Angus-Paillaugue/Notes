@@ -11,7 +11,6 @@ services:
       HOST: '0.0.0.0'
       ORIGIN: 'http://localhost:3000'
       PORT: 3000
-      MYSQL_HOST: db
     env_file:
       - .env
     restart: unless-stopped
@@ -23,11 +22,8 @@ services:
     image: mysql
     restart: always
     container_name: note_db
-    environment:
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
+    env_file:
+      - .env
     volumes:
       - ./mysql:/var/lib/mysql
-      - ./src/lib/server/db/init.sql:/docker-entrypoint-initdb.d/database.sql
+      - ./config/init.sql:/docker-entrypoint-initdb.d/database.sql

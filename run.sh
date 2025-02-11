@@ -36,7 +36,7 @@ fi
 
 
 # Download the docker-compose file if not exists
-if [ -f $dockerComposeFileLocation ]; then
+if [ ! -f $dockerComposeFileLocation ]; then
   curl -s https://raw.githubusercontent.com/Angus-Paillaugue/Notes/refs/heads/main/docker-compose.yaml -o $dockerComposeFileLocation
 fi
 
